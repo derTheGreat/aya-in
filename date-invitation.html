@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Date? 💙</title>
+    <style>
+        :root {
+            --stitch-blue: #4ebcff;
+            --stitch-dark-blue: #2972b6;
+            --stitch-navy: #1a4d7a;
+            --stitch-pink: #ff69b4;
+            --stitch-light-pink: #ffb3d9;
+            --stitch-purple: #9370db;
+            --tropical-bg: #fef5e7;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Bradley Hand', cursive, sans-serif;
+            background: linear-gradient(135deg, var(--tropical-bg) 0%, #e8f4f8 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .section {
+            background: var(--white);
+            border-radius: 30px;
+            padding: 40px;
+            margin: 30px 0;
+            box-shadow: 0 10px 40px rgba(78, 188, 255, 0.2);
+            border: 4px solid var(--stitch-blue);
+            display: none;
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: var(--stitch-dark-blue);
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(78, 188, 255, 0.3);
+        }
+
+        h2 {
+            color: var(--stitch-navy);
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .stitch-emoji {
+            font-size: 4rem;
+            margin: 20px 0;
+            display: block;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .subtitle {
+            color: var(--stitch-purple);
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+
+        .date-options {
+            display: grid;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .date-option {
+            background: linear-gradient(135deg, var(--stitch-blue) 0%, var(--stitch-dark-blue) 100%);
+            color: var(--white);
+            padding: 20px;
+            border-radius: 20px;
+            border: none;
+            font-size: 1.1rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(41, 114, 182, 0.3);
+        }
+
+        .date-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(41, 114, 182, 0.5);
+        }
+
+        .date-option.selected {
+            background: linear-gradient(135deg, var(--stitch-pink) 0%, var(--stitch-purple) 100%);
+            border: 3px solid var(--white);
+        }
+
+        .question-section {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .question {
+            font-size: 1.8rem;
+            color: var(--stitch-dark-blue);
+            margin-bottom: 40px;
+            font-weight: bold;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px;
+            position: relative;
+        }
+
+        .btn {
+            padding: 20px 50px;
+            font-size: 1.5rem;
+            border: none;
+            border-radius: 50px;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);
+            color: var(--white);
+        }
+
+        .btn-yes:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px rgba(34, 197, 94, 0.4);
+        }
+
+        .btn-no {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: var(--white);
+            position: absolute;
+            transition: all 0.1s ease;
+        }
+
+        .itinerary-item {
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 20px;
+            border-left: 6px solid var(--stitch-dark-blue);
+        }
+
+        .itinerary-time {
+            color: var(--stitch-navy);
+            font-weight: bold;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .itinerary-activity {
+            color: var(--stitch-dark-blue);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .message-box {
+            background: linear-gradient(135deg, var(--stitch-light-pink) 0%, #ffd1e8 100%);
+            padding: 30px;
+            border-radius: 25px;
+            margin: 30px 0;
+            border: 4px solid var(--stitch-pink);
+            text-align: center;
+        }
+
+        .message-box p {
+            color: var(--stitch-navy);
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .signature {
+            color: var(--stitch-purple);
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .next-btn {
+            background: linear-gradient(135deg, var(--stitch-blue) 0%, var(--stitch-dark-blue) 100%);
+            color: var(--white);
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 6px 20px rgba(41, 114, 182, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .next-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(41, 114, 182, 0.5);
+        }
+
+        .next-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .hearts {
+            text-align: center;
+            font-size: 2rem;
+            margin: 20px 0;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .final-message {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .final-message h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .celebration {
+            font-size: 4rem;
+            margin: 30px 0;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .btn {
+                padding: 15px 30px;
+                font-size: 1.2rem;
+            }
+
+            .question {
+                font-size: 1.4rem;
+            }
+
+            .section {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Section 1: The Question -->
+        <div class="section active" id="section1">
+            <div class="header">
+                <img src="https://pplx-res.cloudinary.com/image/upload/v1771141024/pplx_search_images/80864b568451499c63dfb095989803515b6c45e1.jpg" alt="Stitch" style="width: 200px; height: auto; margin: 20px auto; display: block; animation: bounce 2s infinite;">
+                <h1>Hello there Aya! 💙</h1>
+                <p class="subtitle">I want you to be part of my adventure!</p>
+            </div>
+
+            <div class="question-section">
+                <p class="question">Will you be my date?</p>
+                <div class="button-container" id="buttonContainer">
+                    <button class="btn btn-yes" onclick="selectYes()">
+                        Yes! 💕
+                    </button>
+                    <button class="btn btn-no" id="noBtn">
+                        No 😢
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Date Selection -->
+        <div class="section" id="section2">
+            <div class="header">
+                <span class="stitch-emoji">🌺</span>
+                <h2>Pick Your Preferred Date 📅</h2>
+                <p class="subtitle">When should our adventure begin?</p>
+            </div>
+
+            <div class="date-options" id="dateOptions">
+                <!-- Will be populated by JavaScript -->
+            </div>
+
+            <div style="text-align: center;">
+                <button class="next-btn" id="nextBtn1" onclick="goToSection(3)" disabled>
+                    See Our Itinerary 🌊
+                </button>
+            </div>
+        </div>
+
+        <!-- Section 3: Itinerary -->
+        <div class="section" id="section3">
+            <div class="header">
+                <span class="stitch-emoji">🎉</span>
+                <h2>Our Date Adventure! 🌴</h2>
+                <p class="subtitle">Here's what I have planned for us...</p>
+            </div>
+
+            <div class="itinerary-item">
+                <div class="itinerary-time">🌅 Lunch time (12:00 PM)</div>
+                <div class="itinerary-activity">
+                    Start our date with an unli wings lunch at J's Hideout Pasig
+                    <br>something we've been planning long ago, kumain lang hanggang magka-pakpak HAHAHA
+                </div>
+            </div>
+
+            <div class="itinerary-item">
+                <div class="itinerary-time">☀️ Afternoon (2:15 PM)</div>
+                <div class="itinerary-activity">
+                    Daanan lang natin yung Sta. Clara Church na hindi mo pa napuntahan
+                    <br>if sunday, we can also attend the mass at 3-4pm, Adjust the lunch to 1-2:30pm
+                </div>
+            </div>
+
+            <div class="itinerary-item">
+                <div class="itinerary-time">🌆 Afternoon (3:00 PM)</div>
+                <div class="itinerary-activity">
+                    Let's go to SM East Ortigas. 
+                    <br>Laro tayo sa arcades, then karaoke, then billiards (if you want), also grab some snacks kung di ka pa busog sa wings HAHAHAHA
+                </div>
+            </div>
+
+            <div class="itinerary-item">
+                <div class="itinerary-time">🌙 Evening (9:00 PM)</div>
+                <div class="itinerary-activity">
+                    Dinner at Bridgetown, Mercato Stalls (if hindi gahol sa oras)
+                    <br>End our day with us just chilling there, we can camp on the grass if u want, grab some chill drinks (smirnoff??) and talk about life.
+                </div>
+            </div>
+
+            <div class="hearts">💙 💜 💖 💙 💜</div>
+
+            <div style="text-align: center;">
+                <button class="next-btn" onclick="goToSection(4)">
+                    Read My Message 💌
+                </button>
+            </div>
+        </div>
+
+        <!-- Section 4: Personal Message -->
+        <div class="section" id="section4">
+            <div class="final-message">
+                <h1>A Message For You 💌</h1>
+                <span class="celebration">🌺💙🌺</span>
+            </div>
+
+            <div class="message-box">
+                <p>
+                    Hello Aya! 😊
+                </p>
+                <p>
+                    I've been thinking about this for a while, and I really want to spend quality time with you. 
+                    I thought it would be amazing to create some special memories together.
+                </p>
+                <p>
+                    I know life can get busy, but I promise this will be a day filled with fun, laughter, 
+                    and lots of great moments. Just you and me, enjoying each other's company. 💕
+                </p>
+                <p>
+                    No matter what we end up doing, as long as I'm with you, it's going to be perfect. 
+                    You make everything better just by being there.
+                </p>
+                <p>
+                    Thank you for saying yes! I can't wait for our date. Get ready for an adventure! 🌊✨
+                </p>
+                <p class="signature">
+                    With all my love,
+                    <br>Lander 💙 (your Andy)
+                </p>
+            </div>
+
+            <div class="hearts">
+                💙 💜 💖 💙 💜 💖 💙
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <p style="color: var(--stitch-dark-blue); font-size: 1.3rem; font-weight: bold;">
+                    "Sa'n man maglayag, ikaw lang patutunguhan." 🌊🌙
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedDate = null;
+        const noBtn = document.getElementById('noBtn');
+        const buttonContainer = document.getElementById('buttonContainer');
+
+        // Generate date options (February 17, 2026 onwards)
+        function generateDateOptions() {
+            const dateOptionsContainer = document.getElementById('dateOptions');
+            const startDate = new Date(2026, 1, 17); // February 17, 2026
+            const options = [];
+
+            // Generate next 7 days starting from Feb 17
+            for (let i = 0; i < 7; i++) {
+                const date = new Date(startDate);
+                date.setDate(startDate.getDate() + i);
+                
+                const dateStr = date.toLocaleDateString('en-US', { 
+                    weekday: 'long', 
+                    month: 'long', 
+                    day: 'numeric',
+                    year: 'numeric'
+                });
+                
+                const button = document.createElement('button');
+                button.className = 'date-option';
+                button.textContent = dateStr;
+                button.onclick = () => selectDate(date, button);
+                
+                dateOptionsContainer.appendChild(button);
+            }
+        }
+
+        function goToSection(sectionNumber) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show target section
+            document.getElementById('section' + sectionNumber).classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function selectDate(date, button) {
+            // Remove selected class from all buttons
+            document.querySelectorAll('.date-option').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked button
+            button.classList.add('selected');
+            selectedDate = date;
+            
+            // Enable next button
+            document.getElementById('nextBtn1').disabled = false;
+        }
+
+        function selectYes() {
+            goToSection(2);
+        }
+
+        // Make "No" button run away from cursor
+        let noButtonMoved = false;
+
+        noBtn.addEventListener('mouseenter', function(e) {
+            if (!noButtonMoved) {
+                noButtonMoved = true;
+            }
+            
+            const containerRect = buttonContainer.getBoundingClientRect();
+            const btnRect = noBtn.getBoundingClientRect();
+            
+            // Generate random position within container
+            const maxX = containerRect.width - btnRect.width - 20;
+            const maxY = containerRect.height - btnRect.height - 20;
+            
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+            
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+        });
+
+        noBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Button moves away before click registers
+            const containerRect = buttonContainer.getBoundingClientRect();
+            const btnRect = noBtn.getBoundingClientRect();
+            
+            const maxX = containerRect.width - btnRect.width - 20;
+            const maxY = containerRect.height - btnRect.height - 20;
+            
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+            
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+        });
+
+        // Initialize date options on page load
+        generateDateOptions();
+    </script>
+</body>
+</html>
+
