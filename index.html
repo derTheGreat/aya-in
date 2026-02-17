@@ -281,6 +281,121 @@
             margin: 30px 0;
         }
 
+                .password-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .lock-icon {
+            font-size: 5rem;
+            margin: 20px 0;
+            animation: shake 3s infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+        }
+
+        .password-question {
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 20px;
+            border-left: 6px solid var(--stitch-dark-blue);
+        }
+
+        .password-question label {
+            display: block;
+            color: var(--stitch-navy);
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .password-hint {
+            color: var(--stitch-purple);
+            font-size: 1rem;
+            margin: 8px 0;
+            font-style: italic;
+        }
+
+        .password-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 15px;
+            font-size: 1.1rem;
+            border: 3px solid var(--stitch-blue);
+            border-radius: 15px;
+            font-family: inherit;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: var(--stitch-pink);
+            box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
+        }
+
+        .password-input.correct {
+            border-color: #22c55e;
+            background: #f0fdf4;
+        }
+
+        .password-input.wrong {
+            border-color: #ef4444;
+            background: #fef2f2;
+            animation: wrongShake 0.5s;
+        }
+
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .feedback {
+            margin-top: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            min-height: 25px;
+        }
+
+        .feedback.correct {
+            color: #22c55e;
+        }
+
+        .feedback.wrong {
+            color: #ef4444;
+        }
+
+        .unlock-btn {
+            background: linear-gradient(135deg, var(--stitch-pink) 0%, var(--stitch-purple) 100%);
+            color: var(--white);
+            padding: 18px 50px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 30px;
+            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .unlock-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 105, 180, 0.6);
+        }
+
+        .unlock-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 2rem;
@@ -307,6 +422,56 @@
 </head>
 <body>
     <div class="container">
+                <!-- Section 0: Password Screen -->
+        <div class="section active" id="section0">
+            <div class="password-screen">
+                <div class="lock-icon">🔒</div>
+                <h1>Access Required 💙</h1>
+                <p class="subtitle" style="font-size: 1.3rem; margin: 20px 0;">
+                    Answer these questions to unlock your special invitation!
+                </p>
+
+                <!-- Question 1 -->
+                <div class="password-question">
+                    <label>Ano ang favorite order mo sa cafe namin? ☕</label>
+                    <p class="password-hint">Hint: Iced *****</p>
+                    <input 
+                        type="text" 
+                        id="answer1" 
+                        class="password-input" 
+                        placeholder="Type your answer here..."
+                        oninput="checkAnswer(1)"
+                    >
+                    <div id="feedback1" class="feedback"></div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="password-question">
+                    <label>Pangalan ng pinakapoging barista na kinababaliwan mo? 😎</label>
+                    <p class="password-hint">Hint: Nickname **** </p>
+                    <input 
+                        type="text" 
+                        id="answer2" 
+                        class="password-input" 
+                        placeholder="Type your answer here..."
+                        oninput="checkAnswer(2)"
+                    >
+                    <div id="feedback2" class="feedback"></div>
+                </div>
+
+                <button id="unlockBtn" class="unlock-btn" onclick="unlockSite()" disabled>
+                    🔓 Unlock My Invitation
+                </button>
+
+                <p style="margin-top: 20px; color: var(--stitch-blue); font-size: 1rem;">
+                    Both answers must be correct! 
+                </p>
+            </div>
+        </div>
+
+        <!-- Section 1: The Question -->
+        <div class="section" id="section1">
+
         <!-- Section 1: The Question -->
         <div class="section active" id="section1">
             <div class="header">
@@ -455,6 +620,79 @@
     </div>
 
     <script>
+                // Password Protection
+        let answer1Correct = false;
+        let answer2Correct = false;
+
+        function checkAnswer(questionNum) {
+            const input = document.getElementById('answer' + questionNum);
+            const feedback = document.getElementById('feedback' + questionNum);
+            const answer = input.value.trim().toLowerCase();
+
+            if (questionNum === 1) {
+                // Check for "Iced Mocha" (case insensitive)
+                if (answer === 'iced mocha') {
+                    answer1Correct = true;
+                    input.classList.remove('wrong');
+                    input.classList.add('correct');
+                    feedback.textContent = '✓ Tama! That\'s your favorite! ☕';
+                    feedback.className = 'feedback correct';
+                } else if (answer.length > 0) {
+                    answer1Correct = false;
+                    input.classList.remove('correct');
+                    input.classList.add('wrong');
+                    feedback.textContent = '✗ Wrong, try again! 😊';
+                    feedback.className = 'feedback wrong';
+                } else {
+                    answer1Correct = false;
+                    input.classList.remove('correct', 'wrong');
+                    feedback.textContent = '';
+                }
+            }
+
+            if (questionNum === 2) {
+                // Check for "Andy" (case insensitive)
+                if (answer === 'andy') {
+                    answer2Correct = true;
+                    input.classList.remove('wrong');
+                    input.classList.add('correct');
+                    feedback.textContent = '✓ Correct! HAHAHAHA 😎';
+                    feedback.className = 'feedback correct';
+                } else if (answer.length > 0) {
+                    answer2Correct = false;
+                    input.classList.remove('correct');
+                    input.classList.add('wrong');
+                    feedback.textContent = '✗ SINO YAN! 😏😡';
+                    feedback.className = 'feedback wrong';
+                } else {
+                    answer2Correct = false;
+                    input.classList.remove('correct', 'wrong');
+                    feedback.textContent = '';
+                }
+            }
+
+            // Enable unlock button if both answers are correct
+            const unlockBtn = document.getElementById('unlockBtn');
+            if (answer1Correct && answer2Correct) {
+                unlockBtn.disabled = false;
+            } else {
+                unlockBtn.disabled = true;
+            }
+        }
+
+        function unlockSite() {
+            // Celebration animation
+            const lockIcon = document.querySelector('.lock-icon');
+            lockIcon.textContent = '🔓';
+            lockIcon.style.animation = 'bounce 0.5s';
+
+            // Show success message
+            setTimeout(() => {
+                goToSection(1);
+            }, 500);
+        }
+
+        
         let selectedDate = null;
         const noBtn = document.getElementById('noBtn');
         const buttonContainer = document.getElementById('buttonContainer');
